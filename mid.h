@@ -55,13 +55,6 @@ struct Argnode {
     Argnode* next;
 };
 
-class MidProcess{
-
-
-};
-
-extern vector<Argnode> midtable;
-
 struct midprintnode {
     string op;
     string m1;
@@ -69,39 +62,61 @@ struct midprintnode {
     string m3;
 };
 
-extern vector<Node*> ArrayTable;
-extern vector<Node*> FieldTable;
-
-extern int level;
 
 
-extern unordered_map<int, vector<pair<int, Node*>>> mapArray;
-extern unordered_map<int, vector<pair<int, Node*>>> mapRecord;
-extern vector<midprintnode> MidPrintNodeTable;
 
-extern int tmpidx;
+class MidProcess{
+private:
+    vector<Argnode> midtable;
+
+    vector<Node*> ArrayTable;
+    vector<Node*> FieldTable;
+
+    int level;
+    string wacao = "";
+
+    unordered_map<int, vector<pair<int, Node*>>> mapArray;
+    unordered_map<int, vector<pair<int, Node*>>> mapRecord;
+    vector<midprintnode> MidPrintNodeTable;
+
+    int tmpidx;
+
+    ARG* processQiantao(Node* t);
+    ARG* NewTemp(int access);
+    ARG* ARGValue(int value);
+    int NewLabel();
+    ARG* ARGLabel(int label);
+    ARG* ARGAddr(const char* id, int level, int off, int access);
+    void GenAssignS(Node* t);
+    void GenCallS(Node* t);
+    void GenReadS(Node* t);
+    void GenWriteS(Node* t);
+    void GenIfS(Node* t);
+    void GenWhileS(Node* t);
+    void GenBody(Node* t);
+    string getBehind(Node* t);
+    void GenStatement(Node* t);
+    ARG* GenArray(Node* t);
+    ARG* GenField(Node* t);
+    // void ProcessChild(Node* t);
+    void GenProcDec(Node*);
+    void GenCode(vector<Argnode>& vec, string codekind, ARG* arg1, ARG* arg2, ARG* arg3);
+    void GenDeclare(Node* t);
+    void GenBody(Node* t,string);
+    void processMid(Node * t);
+
+public:
+    MidProcess(Node* t){
+        processMid(t);
+    }
+    
+    void printMidCode();
+};
 
 
-extern void GenAssignS(Node* t);
-extern void GenCallS(Node* t);
-extern void GenReadS(Node* t);
-extern void GenWriteS(Node* t);
-extern void GenIfS(Node* t);
-extern void GenWhileS(Node* t);
-extern void GenBody(Node* t);
-extern string getBehind(Node* t);
-extern void GenStatement(Node* t);
-extern ARG* GenArray(Node* t);
-extern ARG* GenField(Node* t);
 
-extern void ProcessChild(Node* t);
 
-extern void processMid(Node* t);
 
-extern void printMidCode(vector<Argnode>& vec);
 
-extern void GenProcDec(Node*);
-extern void GenCode(vector<Argnode>& vec, string codekind, ARG* arg1, ARG* arg2, ARG* arg3);
-extern void GenDeclare(Node* t);
 
-extern void GenBody(Node* t,string);
+

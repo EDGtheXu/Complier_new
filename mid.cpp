@@ -9,14 +9,9 @@
 
 using namespace std;
 
-vector<Argnode> midtable;
-
-vector<midprintnode> MidPrintNodeTable;
-
-int tmpidx = 0;
 
 
-ARG* NewTemp(int access) {
+ARG* MidProcess::NewTemp(int access) {
     auto t = new ARG();
     t->form = "AddrForm";
     t->dataLevel = -1;
@@ -30,7 +25,7 @@ ARG* NewTemp(int access) {
     return t;
 }
 
-ARG* ARGValue(int value) {
+ARG* MidProcess::ARGValue(int value) {
     auto t = new ARG();
     t->form = "AddrForm";
     // 写变量名暂时略
@@ -41,14 +36,14 @@ ARG* ARGValue(int value) {
     return t;
 }
 
-int NewLabel()
+int MidProcess::NewLabel()
 {
     // 编号值label += 1
     // 返回新的编号
     return 0;
 }
 
-ARG* ARGLabel(int label)
+ARG* MidProcess::ARGLabel(int label)
 {
     auto t = new ARG();
     t->form = "LabelForm";
@@ -56,7 +51,7 @@ ARG* ARGLabel(int label)
     return t;
 }
 
-ARG* ARGAddr(const char* id, int level, int off, int access)
+ARG* MidProcess::ARGAddr(const char* id, int level, int off, int access)
 {
     auto t = new ARG();
     t->form = "ValueForm";
@@ -71,16 +66,7 @@ ARG* ARGAddr(const char* id, int level, int off, int access)
 
 
 
-string wacao = "";
-
-vector<Node* > ArrayTable;
-vector<Node*> FieldTable;
-int level = 0;
-
-unordered_map<int, vector<pair<int, Node*>>> mapArray;
-unordered_map<int, vector<pair<int, Node*>>> mapRecord;
-
-void processMid(Node * t)
+void MidProcess::processMid(Node * t)
 {
     if (!t)
         return;
@@ -114,7 +100,7 @@ void processMid(Node * t)
 }
 
 
-void GenDeclare(Node* t)
+void MidProcess::GenDeclare(Node* t)
 {
     ++level;
     if (!t)
@@ -182,7 +168,7 @@ void GenDeclare(Node* t)
 }
 
 // 处理声明中的函数（即函数声明）
-void GenProcDec(Node* ttt)
+void MidProcess::GenProcDec(Node* ttt)
 {
     /*if (t->nodekind == "StmLK")
     {
@@ -276,7 +262,7 @@ void GenProcDec(Node* ttt)
 }
 
 // 处理函数body部分
-void GenBody(Node* t)
+void MidProcess::GenBody(Node* t)
 {
     if (!t) {
         return;
@@ -294,7 +280,7 @@ void GenBody(Node* t)
     --level;
 }
 
-void GenBody(Node* t, string f_name)
+void MidProcess::GenBody(Node* t, string f_name)
 {
     if (!t) {
         return;
@@ -313,7 +299,7 @@ void GenBody(Node* t, string f_name)
     --level;
 }
 
-string getBehind(Node* t) {
+string MidProcess::getBehind(Node* t) {
     string strs = "";
 
     string str = t->nodekind;
@@ -343,7 +329,7 @@ string getBehind(Node* t) {
     return strs;
 }
 
-void GenStatement(Node* t)
+void MidProcess::GenStatement(Node* t)
 {
     if (!t)
         return;
@@ -387,7 +373,7 @@ void GenStatement(Node* t)
     }
 }
 
-ARG* GenField(Node* t)
+ARG* MidProcess::GenField(Node* t)
 {
     if (!t)
         return nullptr;
@@ -428,7 +414,7 @@ ARG* GenField(Node* t)
 
 }
 
-ARG* processQiantao(Node* t)
+ARG* MidProcess::processQiantao(Node* t)
 {
     if (!t)
         return nullptr;
@@ -486,7 +472,7 @@ ARG* processQiantao(Node* t)
 }
 
 
-void GenAssignS(Node* t)
+void MidProcess::GenAssignS(Node* t)
 {
     if (!t)
         return;
@@ -517,7 +503,7 @@ void GenAssignS(Node* t)
 
 // 这个还没实现，可以看processQiantao中调用它的部分
 // 写这个前看一下a[1][2][3]这种数组在语法树里的格式长什么样
-ARG* GenArray(Node* t) {
+ARG* MidProcess::GenArray(Node* t) {
 
     ARG* val = processQiantao(t->child[0]); // 得到数组的val
 
@@ -587,51 +573,47 @@ ARG* GenArray(Node* t) {
 */
 
 // 暂时好像没屌用    根据op计算返回的数值
-ARG* Calculate(string op, ARG* left, ARG* right)
-{
-    return nullptr;
-}
+// ARG* MidProcess::Calculate(string op, ARG* left, ARG* right)
+// {
+//     return nullptr;
+// }
 
 // 这个函数已经没屌用了，用的上面的processQiantao(Node* t)来替代
-ARG* GenExpr(Node* t)
-{
-    if (!t)
-        return nullptr;
-    if (t->nodekind == "ExpK")
-    {
-        if (t->kind.exp == "OpK") // 节点类别操作符
-        {
-            auto left = GenExpr(t->child[0]);
-            auto right = GenExpr(t->child[1]);
-            auto tmp = NewTemp(1);
-
-
-            string str = getBehind(t);
-
-            tmp->value = Calculate(str, left, right)->value;
-
-            // 生成
-            GenCode(midtable, str, left, right, tmp);
-            return tmp;
-        }
-        else if (t->kind.exp == "ConstK") // 常表达式类型
-        {
-            auto tmp = new ARG();
-            tmp->form = "ValueForm";
-            tmp->value = 2;
-            return tmp;
-        }
-        else if (t->kind.exp == "IdK") // 变量类型
-        {
-            // 调用GenVar，但是还没实现
-        }
-    }
-    return nullptr;
-}
+// ARG* MidProcess::GenExpr(Node* t)
+// {
+//     if (!t)
+//         return nullptr;
+//     if (t->nodekind == "ExpK")
+//     {
+//         if (t->kind.exp == "OpK") // 节点类别操作符
+//         {
+//             auto left = GenExpr(t->child[0]);
+//             auto right = GenExpr(t->child[1]);
+//             auto tmp = NewTemp(1);
+//             string str = getBehind(t);
+//             tmp->value = Calculate(str, left, right)->value;
+//             // 生成
+//             GenCode(midtable, str, left, right, tmp);
+//             return tmp;
+//         }
+//         else if (t->kind.exp == "ConstK") // 常表达式类型
+//         {
+//             auto tmp = new ARG();
+//             tmp->form = "ValueForm";
+//             tmp->value = 2;
+//             return tmp;
+//         }
+//         else if (t->kind.exp == "IdK") // 变量类型
+//         {
+//             // 调用GenVar，但是还没实现
+//         }
+//     }
+//     return nullptr;
+// }
 
 
 // 只处理了值参的情况
-void GenCallS(Node* t)
+void MidProcess::GenCallS(Node* t)
 {
     auto t_1 = t->child[0]; // 这里应该是有过程的名字
     string t_1_name = getBehind(t_1);
@@ -653,7 +635,7 @@ void GenCallS(Node* t)
 }
 
 // 简单处理
-void GenReadS(Node* t)
+void MidProcess::GenReadS(Node* t)
 {
     // cout << NodePrintInfo(t) << " " << (getBehind(t)) <<  endl;
     // system("pause");
@@ -661,7 +643,7 @@ void GenReadS(Node* t)
     GenCode(midtable, "READC", new ARG(getBehind(t)), nullptr, nullptr);
 }
 
-void GenWriteS(Node* t)
+void MidProcess::GenWriteS(Node* t)
 {
     // auto tmp = GenExpr(t->child[0]);
     auto tmp = processQiantao(t->child[0]);
@@ -669,7 +651,7 @@ void GenWriteS(Node* t)
 }
 
 // child还是sibiligg
-void GenIfS(Node* t)
+void MidProcess::GenIfS(Node* t)
 {
     if (!t)
         return;
@@ -701,7 +683,7 @@ void GenIfS(Node* t)
 }
 
 // 同if
-void GenWhileS(Node* t)
+void MidProcess::GenWhileS(Node* t)
 {
     GenCode(midtable, "WHILE", nullptr, nullptr, nullptr);
     auto t_1 = t->child[0];
@@ -721,7 +703,7 @@ void GenWhileS(Node* t)
 
 
 
-void printMidCode(vector<Argnode>& vec) {
+void MidProcess::printMidCode() {
     cout << "************************************** mid code **************************************" << endl;
     /*for (int i = 0; i < vec.size(); ++i){
         Argnode& s = vec[i];
@@ -766,7 +748,7 @@ void printMidCode(vector<Argnode>& vec) {
     }
 }
 
-void GenCode(vector<Argnode>& vec, string codekind, ARG* arg1, ARG* arg2, ARG* arg3)
+void MidProcess::GenCode(vector<Argnode>& vec, string codekind, ARG* arg1, ARG* arg2, ARG* arg3)
 {
     /*Argnode* tmp = new Argnode;
     tmp->codekind = codekind;

@@ -95,8 +95,8 @@ int main()
     
     ////mid
     Node* ttt=miao;
-    processMid(ttt);
-    printMidCode(midtable);
+    MidProcess* midProcess = new MidProcess(ttt);
+    midProcess->printMidCode();
 
     //Tim
     cout<<"************************************** tim code **************************************"<<endl;
