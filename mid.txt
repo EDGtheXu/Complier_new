@@ -1,0 +1,4 @@
+( READC,v1,-,-)
+( ADD,v1,10, temp0)
+( ASSIGN,temp0,-, v1)
+( WRITEC, v1,-, -)

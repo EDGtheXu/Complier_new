@@ -1,0 +1,37 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "C/C++: g++.exe 生成活动文件",
+            "command": "C:\\MinGW_new\\bin\\g++.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${file}",
+                "${fileDirname}\\global.cpp",
+                "${fileDirname}\\lexical.cpp",
+                "${fileDirname}\\recursion.cpp",
+                "${fileDirname}\\ll1.cpp",
+                "${fileDirname}\\newll1.cpp",
+                "${fileDirname}\\semantic.cpp",
+                "${fileDirname}\\mid.cpp",
+                "${fileDirname}\\tim.cpp",
+
+                "-o",
+                "${fileDirname}\\${fileBasenameNoExtension}.exe"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "调试器生成的任务。"
+        }
+    ],
+    "version": "2.0.0"
+}
